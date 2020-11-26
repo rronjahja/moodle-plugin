@@ -18,11 +18,16 @@
  * Form for editing HTML block instances.
  *
  * @package   block_testblock
- * @copyright 1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @copyright 2020 Rron Jahja <rronjahja@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 class block_testreport extends block_base
 {
+    /**
+     * This is essential for all blocks, and its purpose is to give values to any class member variables that need instantiating.
+     * $this->title is the title displayed in the header of our block. In this case it's set to read the actual title from the language file
+     */
 
     function init()
     {
@@ -30,7 +35,21 @@ class block_testreport extends block_base
 
     }
 
-
+    /**
+     * This method adds the block to the front page. First we check if it is not NULL, then return the actual content.
+     * Otherwise, if it is NULL, define it from the scratch.
+     *
+     *
+     * $quiz_attempts: Calls get_records_sql('query') method to get all attempts of quizzes of the user in one module. The value of 0 is passed to deletioninprogress field to
+     *                 filter the quizzes that are deleted.
+     *
+     * $quiz_in_modules: Calls get_records_sql('query') method to get all available quizzes in a module.
+     *                   17 is the identification value for quizzes in course_modules table.
+     *
+     * $percentage: Percentage is calculated by dividing the number of $quiz_attempts and $quiz_in_modules.
+     *
+     * $rank: Is initialized dynamically by comparing it's value to the rank interval.
+     */
     function get_content()
     {
         global $DB;
@@ -42,12 +61,7 @@ class block_testreport extends block_base
         }
 
         $content = '';
-        $percentage = 0;
-
-//        $quiz_attempts = $DB->get_records_sql('select count(state) as state from {quiz_attempts} join {quiz}
-//            on {quiz_attempts}.quiz={quiz}.id join {course_modules} on {quiz}.course={course_modules}.course
-//            where {quiz}.course=? and userid=? and state=? and deletioninprogress=?', [$COURSE->id, $USER->id, 'finished',0]);
-
+     //Get all attempts of quizes of the user in one module (subject)
         $quiz_attempts = $DB->get_records_sql('SELECT COUNT(*) as counter FROM ( 
                                                                                 select count(*) as subsubcount	from  {quiz}  
                                                                                 			join {quiz_attempts} 
@@ -60,29 +74,31 @@ class block_testreport extends block_base
                                                                                 			and deletioninprogress=?
                                                                                 			group by {quiz_attempts}.quiz) as subcount;', [$COURSE->id, $USER->id, 'finished', 0]);
 
-
+        //Get all available quizes in a module (subject)
         //17 is the value of quiz in course_modules
         $quiz_in_modules = $DB->get_records_sql('SELECT count(course) as allquizzes FROM {course_modules} 
                                                      where course=? and module = ? and deletioninprogress=?;', [$COURSE->id, 17, 0]);
-
+        //Show all attempts
         foreach ($quiz_attempts as $quiz_finished) {
             $content .= $quiz_finished->counter . '<br>';
         }
+        //Show all quizes
         foreach ($quiz_in_modules as $quiz_in_module) {
             $content2 .= $quiz_in_module->allquizzes . '<br>';
         }
 
         $this->content = new stdClass;
 
+        //Calculate percentage
         $percentage = ($content / $content2) * 100;
         if ($content > $content2) {
             $percentage = 100;
         }
-//        if (empty($percentage) || isset($percentage) == false || is_null($percentage)) {
         if (empty($percentage)) {
             $percentage = 0;
         }
 
+        //Create rank system
         if ($percentage >= 80 && $percentage < 90) {
             $rank = get_string('rank', 'block_testreport', '3rd', true);
         } else if ($percentage >= 90 && $percentage < 100) {
@@ -90,9 +106,9 @@ class block_testreport extends block_base
         } else if ($percentage == 100) {
             $rank = get_string('rank', 'block_testreport', '1st', true);
         } else {
-            $rank = get_string('rank', 'block_testreport', 'not defined', true);
+            $rank = get_string('rank', 'block_testreport', 'not high enough!', true);
         }
-        echo $percentage . "adsadas";
+
         $comp = get_string('completed', 'block_testreport', $percentage);
 
         //echo get_string('testblock:completed', 'block_testblock');

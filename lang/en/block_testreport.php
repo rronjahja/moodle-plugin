@@ -1,4 +1,8 @@
 <?php
+/**
+ * This is English language file for the block. Even if the block is in other language, the system needs english folder.
+ * All the strings of the block are stored here, in associated array which makes it easier to call in other files.
+ */
 
 $string['pluginname'] = 'Test Report plugin';
 $string['testreport:addinstance'] = 'Add Test Report block';
