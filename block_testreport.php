@@ -89,6 +89,11 @@ class block_testreport extends block_base
 
         $this->content = new stdClass;
 
+        $first=get_string('first', 'block_testreport');
+        $second=get_string('second', 'block_testreport');
+        $third=get_string('third', 'block_testreport');
+        $not_high=get_string('not_high', 'block_testreport');
+
         //Calculate percentage
         $percentage = ($content / $content2) * 100;
         if ($content > $content2) {
@@ -98,15 +103,16 @@ class block_testreport extends block_base
             $percentage = 0;
         }
 
+
         //Create rank system
         if ($percentage >= 80 && $percentage < 90) {
-            $rank = get_string('rank', 'block_testreport', '3rd', true);
+            $rank = get_string('rank', 'block_testreport', "$first", true);
         } else if ($percentage >= 90 && $percentage < 100) {
-            $rank = get_string('rank', 'block_testreport', '2nd', true);
+            $rank = get_string('rank', 'block_testreport', "$second", true);
         } else if ($percentage == 100) {
-            $rank = get_string('rank', 'block_testreport', '1st', true);
+            $rank = get_string('rank', 'block_testreport', "$third", true);
         } else {
-            $rank = get_string('rank', 'block_testreport', 'not high enough!', true);
+            $rank = get_string('rank', 'block_testreport', "$not_high", true);
         }
 
         $comp = get_string('completed', 'block_testreport', $percentage);

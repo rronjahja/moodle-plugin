@@ -9,4 +9,9 @@ $string['testreport:addinstance'] = 'Add Test Report block';
 $string['testreport:myaddinstance'] = 'Add Test Report block to the My Moodle page';
 $string['completed'] = 'Completed {$a}% ';
 $string['rank'] = 'Your rank is {$a} ';
+$string['first'] = '1st';
+$string['second'] = '2nd';
+$string['third'] = '3rd';
+$string['not_high'] = 'not high enough!';
+
 
