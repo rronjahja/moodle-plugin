@@ -21,9 +21,9 @@
  * @copyright 2020 Rron Jahja <rronjahja@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class block_testreport extends block_base
 {
+
     /**
      * This is essential for all blocks, and its purpose is to give values to any class member variables that need instantiating.
      * $this->title is the title displayed in the header of our block. In this case it's set to read the actual title from the language file
@@ -32,6 +32,10 @@ class block_testreport extends block_base
     function init()
     {
         $this->title = get_string('pluginname', 'block_testreport');
+//        $this->first = get_string('first', 'block_testreport');
+//        $this->second = get_string('second', 'block_testreport');
+//        $this->third = get_string('third', 'block_testreport');
+//        $this->not_high = get_string('not_high', 'block_testreport');
 
     }
 
@@ -61,7 +65,7 @@ class block_testreport extends block_base
         }
 
         $content = '';
-     //Get all attempts of quizes of the user in one module (subject)
+        //Get all attempts of quizes of the user in one module (subject)
         $quiz_attempts = $DB->get_records_sql('SELECT COUNT(*) as counter FROM ( 
                                                                                 select count(*) as subsubcount	from  {quiz}  
                                                                                 			join {quiz_attempts} 
@@ -89,10 +93,10 @@ class block_testreport extends block_base
 
         $this->content = new stdClass;
 
-        $first=get_string('first', 'block_testreport');
-        $second=get_string('second', 'block_testreport');
-        $third=get_string('third', 'block_testreport');
-        $not_high=get_string('not_high', 'block_testreport');
+//        $first=get_string('first', 'block_testreport');
+//        $second=get_string('second', 'block_testreport');
+//        $third=get_string('third', 'block_testreport');
+//        $not_high=get_string('not_high', 'block_testreport');
 
         //Calculate percentage
         $percentage = ($content / $content2) * 100;
@@ -103,16 +107,15 @@ class block_testreport extends block_base
             $percentage = 0;
         }
 
-
         //Create rank system
         if ($percentage >= 80 && $percentage < 90) {
-            $rank = get_string('rank', 'block_testreport', "$first", true);
+            $rank = get_string('rank1', 'block_testreport',  true);
         } else if ($percentage >= 90 && $percentage < 100) {
-            $rank = get_string('rank', 'block_testreport', "$second", true);
+            $rank = get_string('rank2', 'block_testreport',  true);
         } else if ($percentage == 100) {
-            $rank = get_string('rank', 'block_testreport', "$third", true);
+            $rank = get_string('rank3', 'block_testreport',  true);
         } else {
-            $rank = get_string('rank', 'block_testreport', "$not_high", true);
+            $rank = get_string('rank0', 'block_testreport', true);
         }
 
         $comp = get_string('completed', 'block_testreport', $percentage);
